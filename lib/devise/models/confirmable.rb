@@ -274,7 +274,18 @@ module Devise
           confirmable.resend_confirmation_instructions if confirmable.persisted?
           confirmable
         end
-
+          # find an already confirmed used by token
+        # return the user
+        # useful if you are using confirmable to take payment or otherwise process
+        # the user account on the initial confirmation only and want to enable
+        # changing  email with confirmations
+        
+        def confirm_changed_by_token(confirmation_token)
+          confirmable = find_or_initialize_with_error_by(:confirmation_token, confirmation_token)
+          if confirmable.persisted?  
+            confirmable   
+          end
+        end
         # Find a user by its confirmation token and try to confirm it.
         # If no user is found, returns a new user with an error.
         # If the user is already confirmed, create an error for the user
